@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="RobotControl">
+        <file alias="claw">Resources/claw_icon.png</file>
+    </qresource>
+</RCC>
