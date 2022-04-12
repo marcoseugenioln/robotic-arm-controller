@@ -39,17 +39,17 @@ void RobotControl::autoConnect()
 }
 
 void RobotControl::activateClaw() {
-	char data[] = "CLAW\n";
+	char data[] = "9";
 	arduino->writeSerialPort(data, MAX_DATA_LENGTH);
 }
 
 void RobotControl::moveUp() {
-	char data[] = "UP\n";
+	char data[] = "1";
 	arduino->writeSerialPort(data, MAX_DATA_LENGTH);
 }
 
 void RobotControl::moveDown() {
-	char data[] = "DOWN\n";
+	char data[] = "2";
 	arduino->writeSerialPort(data, MAX_DATA_LENGTH);
 }
 

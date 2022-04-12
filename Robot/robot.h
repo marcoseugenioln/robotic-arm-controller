@@ -3,11 +3,11 @@
 
 #include <Arduino.h>
 #include <Servo.h>
+#include <Thread.h>
 
 class Robot{
-
     private:
-
+    
     /*Claw atributes*/
     Servo claw;
     int pinClaw;
@@ -18,17 +18,31 @@ class Robot{
     /*First arm atributes*/
     Servo arm1;
     int pinArm1;
-    int positionArm1 = 0;
-    bool moveUp = false;
-    bool moveDown = false;
+    int positionArm1 = 0;  
+    int velocity = 1;
+    bool up = false;
+    bool down = false;
     
     public:
-    void receive(String data);
-    void setupRobot(int pinClaw, int pinArm1);
-    
+
+    /*
+    * executa as configurações iniciais do robô
+    */
+    void setupRobot(int pinClaw, int pinArm1);  
+
+    /*
+    * Ativa a garra
+    */
     void activateClaw();
-    void activateArm1(int data);
-    
+
+    /*
+    * movimenta o braço 1
+    */
+    void moveVerticalArm();
+    void moveUp();
+    void moveDown();
+
+    void receive();
 };
 
 #endif
