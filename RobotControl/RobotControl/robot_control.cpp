@@ -4,6 +4,7 @@
 
 #include "robot_control.h"
 #include "serial_port.hpp"
+#include <QDebug>
 
 RobotControl::RobotControl(QWidget *parent)
     : QMainWindow(parent)
@@ -11,10 +12,21 @@ RobotControl::RobotControl(QWidget *parent)
 	this->arduino = new SerialPort(PORT_NAME);
     ui.setupUi(this);
 	connect(ui.claw, SIGNAL(clicked()), this, SLOT(activateClaw()));
-	connect(ui.verticalArmUp, SIGNAL(pressed()), this, SLOT(moveUp()));
-	connect(ui.verticalArmDown, SIGNAL(pressed()), this, SLOT(moveDown()));
-	connect(ui.verticalArmUp, SIGNAL(released()), this, SLOT(moveUp()));
-	connect(ui.verticalArmDown, SIGNAL(released()), this, SLOT(moveDown()));
+
+	connect(ui.up, SIGNAL(pressed()), this, SLOT(moveUp()));
+	connect(ui.down, SIGNAL(pressed()), this, SLOT(moveDown()));
+	connect(ui.up, SIGNAL(released()), this, SLOT(moveUp()));
+	connect(ui.down, SIGNAL(released()), this, SLOT(moveDown()));
+
+	connect(ui.forwards, SIGNAL(pressed()), this, SLOT(moveForwards()));
+	connect(ui.backwards, SIGNAL(pressed()), this, SLOT(moveBackwards()));
+	connect(ui.forwards, SIGNAL(released()), this, SLOT(moveForwards()));
+	connect(ui.backwards, SIGNAL(released()), this, SLOT(moveBackwards()));
+
+	connect(ui.right, SIGNAL(pressed()), this, SLOT(moveRight()));
+	connect(ui.left, SIGNAL(pressed()), this, SLOT(moveLeft()));
+	connect(ui.right, SIGNAL(released()), this, SLOT(moveRight()));
+	connect(ui.left, SIGNAL(released()), this, SLOT(moveLeft()));
 }
 
 void RobotControl::autoConnect()
@@ -53,3 +65,22 @@ void RobotControl::moveDown() {
 	arduino->writeSerialPort(data, MAX_DATA_LENGTH);
 }
 
+void RobotControl::moveForwards() {
+	char data[] = "3";
+	arduino->writeSerialPort(data, MAX_DATA_LENGTH);
+}
+
+void RobotControl::moveBackwards() {
+	char data[] = "4";
+	arduino->writeSerialPort(data, MAX_DATA_LENGTH);
+}
+
+void RobotControl::moveRight() {
+	char data[] = "5";
+	arduino->writeSerialPort(data, MAX_DATA_LENGTH);
+}
+
+void RobotControl::moveLeft() {
+	char data[] = "6";
+	arduino->writeSerialPort(data, MAX_DATA_LENGTH);
+}

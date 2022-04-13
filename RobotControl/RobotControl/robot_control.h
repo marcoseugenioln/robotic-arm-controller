@@ -16,6 +16,10 @@ public slots:
 	void activateClaw();
 	void moveUp();
 	void moveDown();
+	void moveForwards();
+	void moveBackwards();
+	void moveRight();
+	void moveLeft();
 
 private:
     Ui::RobotControlClass ui;
