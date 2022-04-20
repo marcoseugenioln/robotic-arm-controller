@@ -1,25 +1,28 @@
 #define PIN_CLAW 8
-#define PIN_ARM1 6
+#define PIN_VERTICAL_ARM 9
+#define PIN_HORIZONTAL_ARM 10
+#define PIN_BASE 11
 #define HOME 0
-#define CLOSED 120
+#define FRONT 90
+#define CLOSED 100
 #define MAX_TIME 6000
 
+#define CLAW 9
+#define UP 1
+#define DOWN 2
+#define FORWARDS 3
+#define BACKWARDS 4
+#define RIGHT 5
+#define LEFT 6
+
 #include <Servo.h>
-#include <Thread.h>
-#include <ThreadController.h>
-
-ThreadController controller;
-Thread receiver;
-Thread moveUp;
-Thread moveDown;
-
 Servo claw;
-Servo arm1;
+Servo verticalArm;
+Servo horizontalArm;
+Servo base;
 
-int positionArm1 = 0;
-bool movingUp = false;
-bool movingDown = false;
-bool closed = false;
+bool closed = true;
+int velocity = 10;
 
 void activateClaw(){
   if(!closed){
@@ -35,80 +38,46 @@ void activateClaw(){
   }
 }
 
-void up(){
-  while(1){
-    positionArm1 = positionArm1 + 3;
-    arm1.write(positionArm1);
-  }
-}
-
-void down(){
-  while(1){
-    positionArm1 = positionArm1 - 3;
-    arm1.write(positionArm1);
-  }
-}
-
 void setup(){
   Serial.begin(9600);
   
   claw.attach(PIN_CLAW);
-  arm1.attach(PIN_ARM1);
-  
-  arm1.write(HOME);
+  verticalArm.attach(PIN_VERTICAL_ARM);
+  horizontalArm.attach(PIN_HORIZONTAL_ARM);
+  base.attach(PIN_BASE);
 
-  receiver = Thread();
-  moveUp = Thread();
-  moveDown = Thread();
-  
-  receiver.onRun(receive);
-  moveUp.onRun(up);
-  moveDown.onRun(down);
-
-  moveUp.setInterval(MAX_TIME);
-  moveDown.setInterval(MAX_TIME);
-  
-  receiver.enabled = true;  
-  moveUp.enabled = false;
-  moveDown.enabled = false; 
-
-  controller = ThreadController();
-  controller.add(&moveUp);
-  controller.add(&moveDown);
-  controller.add(&receiver);
-}
-
-void receive(){
-  if(Serial.available()){
-  switch(Serial.parseInt()){
-    case 9:
-      activateClaw();
-    case 1:
-      if(!moveUp.enabled){
-        moveUp.enabled = true;
-      }
-      else{
-        moveUp.enabled = false;
-      }
-    case 2:
-      if(!moveDown.enabled){
-        moveDown.enabled = true;
-      }
-      else{
-        moveDown.enabled = false;
-      }
-    case 3:
-      break;
-    case 4:
-      break;
-    case 5:
-      break;
-    case 6:
-      break;
-    }
-  }
+  verticalArm.write(HOME);
+  horizontalArm.write(HOME);
+  base.write(FRONT);
+  claw.write(CLOSED);
 }
 
 void loop(){
-  receive();
+  if(Serial.available()){
+    switch(Serial.parseInt()){
+      case CLAW:
+        activateClaw();
+        break;
+      case UP:
+        //verticalArm.write(verticalArm.read() + velocity);
+        break;
+      case DOWN:
+        //verticalArm.write(verticalArm.read() - velocity);
+        break;
+      case FORWARDS:
+        horizontalArm.write(horizontalArm.read() + velocity);
+        delay(50);
+        break;
+      case BACKWARDS:
+        horizontalArm.write(horizontalArm.read() - velocity);
+        delay(50);
+        break;
+      case RIGHT:
+        //base.write(base.read() + velocity);
+        break;
+      case LEFT:
+        //base.write(base.read() - velocity);
+        break;
+    }
+  }
 }

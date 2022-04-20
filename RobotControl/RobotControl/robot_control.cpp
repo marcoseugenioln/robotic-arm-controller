@@ -1,32 +1,33 @@
 #define SEND
 #define MAX_DATA_LENGTH 255
 #define PORT_NAME "COM5"
+#define CLAW "9"
+#define UP "1"
+#define DOWN "2"
+#define FORWARDS "3"
+#define BACKWARDS "4"
+#define RIGHT "5"
+#define LEFT "6"
 
 #include "robot_control.h"
 #include "serial_port.hpp"
 #include <QDebug>
+#include <QTimer>
 
 RobotControl::RobotControl(QWidget *parent)
     : QMainWindow(parent)
 {
 	this->arduino = new SerialPort(PORT_NAME);
+
     ui.setupUi(this);
+
 	connect(ui.claw, SIGNAL(clicked()), this, SLOT(activateClaw()));
-
-	connect(ui.up, SIGNAL(pressed()), this, SLOT(moveUp()));
-	connect(ui.down, SIGNAL(pressed()), this, SLOT(moveDown()));
-	connect(ui.up, SIGNAL(released()), this, SLOT(moveUp()));
-	connect(ui.down, SIGNAL(released()), this, SLOT(moveDown()));
-
-	connect(ui.forwards, SIGNAL(pressed()), this, SLOT(moveForwards()));
-	connect(ui.backwards, SIGNAL(pressed()), this, SLOT(moveBackwards()));
-	connect(ui.forwards, SIGNAL(released()), this, SLOT(moveForwards()));
-	connect(ui.backwards, SIGNAL(released()), this, SLOT(moveBackwards()));
-
-	connect(ui.right, SIGNAL(pressed()), this, SLOT(moveRight()));
-	connect(ui.left, SIGNAL(pressed()), this, SLOT(moveLeft()));
-	connect(ui.right, SIGNAL(released()), this, SLOT(moveRight()));
-	connect(ui.left, SIGNAL(released()), this, SLOT(moveLeft()));
+	connect(ui.up, SIGNAL(clicked()), this, SLOT(moveUp()));
+	connect(ui.down, SIGNAL(clicked()), this, SLOT(moveDown()));
+	connect(ui.forwards, SIGNAL(clicked()), this, SLOT(moveForwards()));
+	connect(ui.backwards, SIGNAL(clicked()), this, SLOT(moveBackwards()));
+	connect(ui.right, SIGNAL(clicked()), this, SLOT(moveRight()));
+	connect(ui.left, SIGNAL(clicked()), this, SLOT(moveLeft()));
 }
 
 void RobotControl::autoConnect()
@@ -51,36 +52,29 @@ void RobotControl::autoConnect()
 }
 
 void RobotControl::activateClaw() {
-	char data[] = "9";
-	arduino->writeSerialPort(data, MAX_DATA_LENGTH);
+	arduino->writeSerialPort(CLAW, MAX_DATA_LENGTH);
 }
 
 void RobotControl::moveUp() {
-	char data[] = "1";
-	arduino->writeSerialPort(data, MAX_DATA_LENGTH);
+	arduino->writeSerialPort(UP, MAX_DATA_LENGTH);
 }
 
 void RobotControl::moveDown() {
-	char data[] = "2";
-	arduino->writeSerialPort(data, MAX_DATA_LENGTH);
+	arduino->writeSerialPort(DOWN, MAX_DATA_LENGTH);
 }
 
 void RobotControl::moveForwards() {
-	char data[] = "3";
-	arduino->writeSerialPort(data, MAX_DATA_LENGTH);
+	arduino->writeSerialPort(FORWARDS, MAX_DATA_LENGTH);
 }
 
 void RobotControl::moveBackwards() {
-	char data[] = "4";
-	arduino->writeSerialPort(data, MAX_DATA_LENGTH);
+	arduino->writeSerialPort(BACKWARDS, MAX_DATA_LENGTH);
 }
 
 void RobotControl::moveRight() {
-	char data[] = "5";
-	arduino->writeSerialPort(data, MAX_DATA_LENGTH);
+	arduino->writeSerialPort(RIGHT, MAX_DATA_LENGTH);
 }
 
 void RobotControl::moveLeft() {
-	char data[] = "6";
-	arduino->writeSerialPort(data, MAX_DATA_LENGTH);
+	arduino->writeSerialPort(LEFT, MAX_DATA_LENGTH);
 }
